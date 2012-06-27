@@ -323,7 +323,7 @@ class Configuration extends \Doctrine\DBAL\Configuration
      *
      * @param string $name The name of the query.
      * @param string $sql The native SQL query string.
-     * @param ResultSetMapping $rsm The ResultSetMapping used for the results of the SQL query.
+     * @param Query\ResultSetMapping $rsm The ResultSetMapping used for the results of the SQL query.
      */
     public function addNamedNativeQuery($name, $sql, Query\ResultSetMapping $rsm)
     {
@@ -543,7 +543,7 @@ class Configuration extends \Doctrine\DBAL\Configuration
     public function getClassMetadataFactoryName()
     {
         if ( ! isset($this->_attributes['classMetadataFactoryName'])) {
-            $this->_attributes['classMetadataFactoryName'] = 'Doctrine\ORM\Mapping\ClassMetadataFactory';
+            $this->_attributes['classMetadataFactoryName'] = 'Doctrine\\ORM\\Mapping\\ClassMetadataFactory';
         }
 
         return $this->_attributes['classMetadataFactoryName'];
@@ -656,5 +656,27 @@ class Configuration extends \Doctrine\DBAL\Configuration
         }
 
         return $this->_attributes['quoteStrategy'];
+    }
+
+    /**
+     * Set a custom class for ProxyFactory.
+     *
+     * @param string $factoryClassName
+     */
+    public function setProxyFactoryClassName($factoryClassName)
+    {
+        $this->_attributes['proxyFactoryClassName'] = $factoryClassName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProxyFactoryClassName()
+    {
+        if ( ! isset($this->_attributes['proxyFactoryClassName'])) {
+            $this->_attributes['proxyFactoryClassName'] = '\\Doctrine\\ORM\\Proxy\\ProxyFactory';
+        }
+
+        return $this->_attributes['proxyFactoryClassName'];
     }
 }
