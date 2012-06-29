@@ -652,6 +652,17 @@ class Configuration extends \Doctrine\DBAL\Configuration
     }
 
     /**
+     * Set naming strategy class
+     *
+     * @since 2.3
+     * @param string $namingStrategyClass class for naming stategy
+     */
+    public function setNamingStrategyClass($namingStrategyClass)
+    {
+        $this->setNamingStrategy(new $namingStrategyClass);
+    }
+
+    /**
      * Get naming strategy..
      *
      * @since 2.3
