@@ -2830,4 +2830,12 @@ class ClassMetadataInfo implements ClassMetadata
     {
         return isset($this->customPersisterClass);
     }
+
+    /**
+     * @param string $persisterClass
+     */
+    public function setCustomPersisterClass($persisterClass)
+    {
+        $this->customPersisterClass = $persisterClass;
+    }
 }
