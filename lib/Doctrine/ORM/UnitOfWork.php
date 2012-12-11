@@ -2870,19 +2870,24 @@ class UnitOfWork implements PropertyChangedListener
     public function getCollectionPersister(array $association)
     {
         $type = $association['type'];
-
+        //check if persister for collection has already been set
         if (isset($this->collectionPersisters[$type])) {
             return $this->collectionPersisters[$type];
         }
 
-        switch ($type) {
-            case ClassMetadata::ONE_TO_MANY:
-                $persister = new Persisters\OneToManyPersister($this->em);
-                break;
+        if (isset($association['persisterClass'])) {
+            $persisterClass = $association['persisterClass'];
+            $persister = new $persisterClass($this->em);
+        } else {
+            switch ($type) {
+                case ClassMetadata::ONE_TO_MANY:
+                    $persister = new Persisters\OneToManyPersister($this->em);
+                    break;
 
-            case ClassMetadata::MANY_TO_MANY:
-                $persister = new Persisters\ManyToManyPersister($this->em);
-                break;
+                case ClassMetadata::MANY_TO_MANY:
+                    $persister = new Persisters\ManyToManyPersister($this->em);
+                    break;
+            }
         }
 
         $this->collectionPersisters[$type] = $persister;
