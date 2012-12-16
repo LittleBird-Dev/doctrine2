@@ -141,6 +141,7 @@ class SchemaTool
         $schema = new Schema(array(), array(), $metadataSchemaConfig);
 
         foreach ($classes as $class) {
+            /** @var \Doctrine\ORM\Mapping\ClassMetadata $class */
             if ($this->processingNotRequired($class, $processedClasses)) {
                 continue;
             }
@@ -189,19 +190,26 @@ class SchemaTool
                 } else {
                     // Add an ID FK column to child tables
                     /* @var \Doctrine\ORM\Mapping\ClassMetadata $class */
-                    $idMapping = $class->fieldMappings[$class->identifier[0]];
-                    $this->_gatherColumn($class, $idMapping, $table);
-                    $columnName = $this->quoteStrategy->getColumnName($class->identifier[0], $class, $this->platform);
-                    // TODO: This seems rather hackish, can we optimize it?
-                    $table->getColumn($columnName)->setAutoincrement(false);
+                    $inheritedKeyColumns = array();
+                    foreach ($class->identifier as $identifierField) {
+                        $idMapping = $class->fieldMappings[$identifierField];
+                        if (isset($idMapping['inherited'])) {
+                            $this->_gatherColumn($class, $idMapping, $table);
+                            $columnName = $this->quoteStrategy->getColumnName($identifierField, $class, $this->platform);
+                            // TODO: This seems rather hackish, can we optimize it?
+                            $table->getColumn($columnName)->setAutoincrement(false);
 
-                    $pkColumns[] = $columnName;
-
-                    // Add a FK constraint on the ID column
-                    $table->addUnnamedForeignKeyConstraint(
-                        $this->quoteStrategy->getTableName($this->em->getClassMetadata($class->rootEntityName), $this->platform),
-                        array($columnName), array($columnName), array('onDelete' => 'CASCADE')
-                    );
+                            $pkColumns[] = $columnName;
+                            $inheritedKeyColumns[] = $columnName;
+                        }
+                    }
+                    if (!empty($inheritedKeyColumns)) {
+                        // Add a FK constraint on the ID column
+                        $table->addForeignKeyConstraint(
+                            $this->quoteStrategy->getTableName($this->em->getClassMetadata($class->rootEntityName), $this->platform),
+                            $inheritedKeyColumns, $inheritedKeyColumns, array('onDelete' => 'CASCADE')
+                        );
+                    }
                 }
 
                 $table->setPrimaryKey($pkColumns);
