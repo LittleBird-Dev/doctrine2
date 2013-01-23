@@ -11,16 +11,26 @@ require_once VENDOR_DIR.'/doctrine/common/lib/Doctrine/Common/ClassLoader.php';
 if (isset($GLOBALS['DOCTRINE_COMMON_PATH'])) {
     $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common', $GLOBALS['DOCTRINE_COMMON_PATH']);
 } else {
-    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Collections', VENDOR_DIR . '/doctrine/collections/lib');
-    $classLoader->register();
-    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Annotations', VENDOR_DIR . '/doctrine/annotations/lib');
-    $classLoader->register();
-    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Cache', VENDOR_DIR . '/doctrine/cache/lib');
-    $classLoader->register();
-    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Inflector', VENDOR_DIR . '/doctrine/inflector/lib');
-    $classLoader->register();
-    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Lexer', VENDOR_DIR . '/doctrine/lexer/lib');
-    $classLoader->register();
+    if(file_exists(VENDOR_DIR . '/doctrine/collections/lib')) {
+        $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Collections', VENDOR_DIR . '/doctrine/collections/lib');
+        $classLoader->register();
+    }
+    if(file_exists(VENDOR_DIR . '/doctrine/annotations/lib')) {
+        $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Annotations', VENDOR_DIR . '/doctrine/annotations/lib');
+        $classLoader->register();
+    }
+    if(file_exists(VENDOR_DIR . '/doctrine/cache/lib')) {
+        $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Cache', VENDOR_DIR . '/doctrine/cache/lib');
+        $classLoader->register();
+    }
+    if(file_exists(VENDOR_DIR . '/doctrine/inflector/lib')) {
+        $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Inflector', VENDOR_DIR . '/doctrine/inflector/lib');
+        $classLoader->register();
+    }
+    if(file_exists(VENDOR_DIR . '/doctrine/lexer/lib')) {
+        $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common\Lexer', VENDOR_DIR . '/doctrine/lexer/lib');
+        $classLoader->register();
+    }
     $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common', VENDOR_DIR . '/doctrine/common/lib');
 }
 $classLoader->register();
