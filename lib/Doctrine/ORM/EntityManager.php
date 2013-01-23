@@ -47,77 +47,77 @@ class EntityManager implements ObjectManager
      *
      * @var \Doctrine\ORM\Configuration
      */
-    private $config;
+    protected $config;
 
     /**
      * The database connection used by the EntityManager.
      *
      * @var \Doctrine\DBAL\Connection
      */
-    private $conn;
+    protected $conn;
 
     /**
      * The metadata factory, used to retrieve the ORM metadata of entity classes.
      *
      * @var \Doctrine\ORM\Mapping\ClassMetadataFactory
      */
-    private $metadataFactory;
+    protected $metadataFactory;
 
     /**
      * The EntityRepository instances.
      *
      * @var array
      */
-    private $repositories = array();
+    protected $repositories = array();
 
     /**
      * The UnitOfWork used to coordinate object-level transactions.
      *
      * @var \Doctrine\ORM\UnitOfWork
      */
-    private $unitOfWork;
+    protected $unitOfWork;
 
     /**
      * The event manager that is the central point of the event system.
      *
      * @var \Doctrine\Common\EventManager
      */
-    private $eventManager;
+    protected $eventManager;
 
     /**
      * The maintained (cached) hydrators. One instance per type.
      *
      * @var array
      */
-    private $hydrators = array();
+    protected $hydrators = array();
 
     /**
      * The proxy factory used to create dynamic proxies.
      *
      * @var \Doctrine\ORM\Proxy\ProxyFactory
      */
-    private $proxyFactory;
+    protected $proxyFactory;
 
     /**
      * The expression builder instance used to generate query expressions.
      *
      * @var \Doctrine\ORM\Query\Expr
      */
-    private $expressionBuilder;
+    protected $expressionBuilder;
 
     /**
      * Whether the EntityManager is closed or not.
      *
      * @var bool
      */
-    private $closed = false;
+    protected $closed = false;
 
     /**
      * Collection of query filters.
      *
      * @var \Doctrine\ORM\Query\FilterCollection
      */
-    private $filterCollection;
+    protected $filterCollection;
 
     /**
      * Creates a new EntityManager that operates on the given database connection
@@ -140,7 +140,8 @@ class EntityManager implements ObjectManager
         $this->metadataFactory->setCacheDriver($this->config->getMetadataCacheImpl());
 
         $this->unitOfWork   = new UnitOfWork($this);
-        $this->proxyFactory = new ProxyFactory(
+        $proxyFactoryClassName = $config->getProxyFactoryClassName();
+        $this->proxyFactory = new $proxyFactoryClassName(
             $this,
             $config->getProxyDir(),
             $config->getProxyNamespace(),
@@ -801,7 +802,7 @@ class EntityManager implements ObjectManager
      *
      * @throws ORMException If the EntityManager is closed.
      */
-    private function errorIfClosed()
+    protected function errorIfClosed()
     {
         if ($this->closed) {
             throw ORMException::entityManagerClosed();
@@ -942,7 +943,7 @@ class EntityManager implements ObjectManager
                 throw new \InvalidArgumentException("Invalid argument: " . $conn);
         }
 
-        return new EntityManager($conn, $config, $conn->getEventManager());
+        return new static($conn, $config, $conn->getEventManager());
     }
 
     /**

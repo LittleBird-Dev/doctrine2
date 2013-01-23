@@ -239,6 +239,14 @@ class ClassMetadataInfo implements ClassMetadata
     public $customRepositoryClassName;
 
     /**
+     * The name of a custom persister class used for the entity class.
+     * (Optional).
+     *
+     * @var string
+     */
+    public $customPersisterClass;
+
+    /**
      * READ-ONLY: Whether this class describes the mapping of a mapped superclass.
      *
      * @var boolean
@@ -2981,5 +2989,22 @@ class ClassMetadataInfo implements ClassMetadata
             }
         }
         return $relations;
+    }
+
+    /**
+     * Does class makes use of a custom persister
+     * @return bool
+     */
+    public function hasCustomPersister()
+    {
+        return isset($this->customPersisterClass);
+    }
+
+    /**
+     * @param string $persisterClass
+     */
+    public function setCustomPersisterClass($persisterClass)
+    {
+        $this->customPersisterClass = $persisterClass;
     }
 }

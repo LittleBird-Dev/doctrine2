@@ -2913,6 +2913,10 @@ class UnitOfWork implements PropertyChangedListener
         $class = $this->em->getClassMetadata($entityName);
 
         switch (true) {
+            case ($class->hasCustomPersister()):
+                $persisterClass = $class->customPersisterClass;
+                $persister = new $persisterClass($this->em, $class);
+                break;
             case ($class->isInheritanceTypeNone()):
                 $persister = new Persisters\BasicEntityPersister($this->em, $class);
                 break;
@@ -2949,14 +2953,19 @@ class UnitOfWork implements PropertyChangedListener
             return $this->collectionPersisters[$type];
         }
 
-        switch ($type) {
-            case ClassMetadata::ONE_TO_MANY:
-                $persister = new Persisters\OneToManyPersister($this->em);
-                break;
+        if (isset($association['persisterClass'])) {
+            $persisterClass = $association['persisterClass'];
+            $persister = new $persisterClass($this->em);
+        } else {
+            switch ($type) {
+                case ClassMetadata::ONE_TO_MANY:
+                    $persister = new Persisters\OneToManyPersister($this->em);
+                    break;
 
-            case ClassMetadata::MANY_TO_MANY:
-                $persister = new Persisters\ManyToManyPersister($this->em);
-                break;
+                case ClassMetadata::MANY_TO_MANY:
+                    $persister = new Persisters\ManyToManyPersister($this->em);
+                    break;
+            }
         }
 
         $this->collectionPersisters[$type] = $persister;

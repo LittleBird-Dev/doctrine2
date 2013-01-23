@@ -1,5 +1,5 @@
 {
-    "name": "doctrine/orm",
+    "name": "littlebird/doctrine/orm",
     "type": "library",
     "description": "Object-Relational-Mapper for PHP",
     "keywords": ["orm", "database"],
@@ -9,7 +9,8 @@
         {"name": "Guilherme Blanco", "email": "guilhermeblanco@gmail.com"},
         {"name": "Roman Borschel", "email": "roman@code-factory.org"},
         {"name": "Benjamin Eberlei", "email": "kontakt@beberlei.de"},
-        {"name": "Jonathan Wage", "email": "jonwage@gmail.com"}
+        {"name": "Jonathan Wage", "email": "jonwage@gmail.com"},
+        {"name": "Thomas Rothe", "email": "thomas.rothe@little-bird.de"}
     ],
     "require": {
         "php": ">=5.3.2",
@@ -22,6 +23,9 @@
     },
     "suggest": {
         "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
+    },
+    "replace": {
+        "doctrine/orm": "self.version"
     },
     "autoload": {
         "psr-0": { "Doctrine\\ORM\\": "lib/" }

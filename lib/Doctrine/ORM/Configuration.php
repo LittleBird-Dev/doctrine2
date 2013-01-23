@@ -624,7 +624,7 @@ class Configuration extends \Doctrine\DBAL\Configuration
     public function getClassMetadataFactoryName()
     {
         if ( ! isset($this->_attributes['classMetadataFactoryName'])) {
-            $this->_attributes['classMetadataFactoryName'] = 'Doctrine\ORM\Mapping\ClassMetadataFactory';
+            $this->_attributes['classMetadataFactoryName'] = 'Doctrine\\ORM\\Mapping\\ClassMetadataFactory';
         }
 
         return $this->_attributes['classMetadataFactoryName'];
@@ -719,7 +719,17 @@ class Configuration extends \Doctrine\DBAL\Configuration
     }
 
     /**
-     * Gets naming strategy..
+     * Set naming strategy class
+     *
+     * @since 2.3
+     * @param string $namingStrategyClass class for naming stategy
+     */
+    public function setNamingStrategyClass($namingStrategyClass)
+    {
+        $this->setNamingStrategy(new $namingStrategyClass);
+    }
+    /**
+     * Get naming strategy..
      *
      * @since 2.3
      *
@@ -762,5 +772,27 @@ class Configuration extends \Doctrine\DBAL\Configuration
         }
 
         return $this->_attributes['quoteStrategy'];
+    }
+
+    /**
+     * Set a custom class for ProxyFactory.
+     *
+     * @param string $factoryClassName
+     */
+    public function setProxyFactoryClassName($factoryClassName)
+    {
+        $this->_attributes['proxyFactoryClassName'] = $factoryClassName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProxyFactoryClassName()
+    {
+        if ( ! isset($this->_attributes['proxyFactoryClassName'])) {
+            $this->_attributes['proxyFactoryClassName'] = '\\Doctrine\\ORM\\Proxy\\ProxyFactory';
+        }
+
+        return $this->_attributes['proxyFactoryClassName'];
     }
 }
