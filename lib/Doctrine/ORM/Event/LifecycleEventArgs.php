@@ -38,10 +38,10 @@ class LifecycleEventArgs extends BaseLifecycleEventArgs
      *
      * @return object
      */
-    public function getEntity()
+    /*public function getEntity()
     {
         return $this->getObject();
-    }
+    }*/
 
     /**
      * Retrieves associated EntityManager.
