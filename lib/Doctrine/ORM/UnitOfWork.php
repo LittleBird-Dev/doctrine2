@@ -2586,7 +2586,13 @@ class UnitOfWork implements PropertyChangedListener
 
                                 default:
                                     // TODO: This is very imperformant, ignore it?
-                                    $newValue = $this->em->find($assoc['targetEntity'], $associatedId);
+                                    $repository = $this->em->getRepository($assoc['targetEntity']);
+                                    $newValue = $repository->find($associatedId);
+                                    if ($targetClass->isIdentifierComposite && count($associatedId) !== count($targetClass->identifier)) {
+                                        // refresh identifiers to get complete composite key
+                                        $associatedId = $targetClass->getIdentifierValues($newValue);
+                                        $relatedIdHash = implode(' ', $associatedId);
+                                    }
                                     break;
                             }
 
