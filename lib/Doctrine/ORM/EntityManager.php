@@ -138,7 +138,8 @@ class EntityManager implements ObjectManager
         $this->metadataFactory->setEntityManager($this);
         $this->metadataFactory->setCacheDriver($this->config->getMetadataCacheImpl());
 
-        $this->unitOfWork   = new UnitOfWork($this);
+        $unitOfWorkClassName = $config->getUnitOfWorkClassNameClassName();
+        $this->unitOfWork   = new $unitOfWorkClassName($this);
         $proxyFactoryClassName = $config->getProxyFactoryClassName();
         $this->proxyFactory = new $proxyFactoryClassName(
             $this,

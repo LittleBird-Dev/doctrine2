@@ -713,4 +713,26 @@ class Configuration extends \Doctrine\DBAL\Configuration
 
         return $this->_attributes['proxyFactoryClassName'];
     }
+
+    /**
+     * Set a custom class for unitOfWork.
+     *
+     * @param string $unitOfWorkClassName
+     */
+    public function setUnitOfWorkClassName($unitOfWorkClassName)
+    {
+        $this->_attributes['unitOfWorkClassName'] = $unitOfWorkClassName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnitOfWorkClassNameClassName()
+    {
+        if ( ! isset($this->_attributes['unitOfWorkClassName'])) {
+            $this->_attributes['unitOfWorkClassName'] = '\\Doctrine\\ORM\\UnitOfWork';
+        }
+
+        return $this->_attributes['unitOfWorkClassName'];
+    }
 }

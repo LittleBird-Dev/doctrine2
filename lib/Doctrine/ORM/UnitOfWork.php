@@ -75,7 +75,7 @@ class UnitOfWork implements PropertyChangedListener
      *
      * @var array
      */
-    private $identityMap = array();
+    protected $identityMap = array();
 
     /**
      * Map of all identifiers of managed entities.
@@ -83,7 +83,7 @@ class UnitOfWork implements PropertyChangedListener
      *
      * @var array
      */
-    private $entityIdentifiers = array();
+    protected $entityIdentifiers = array();
 
     /**
      * Map of the original entity data of managed entities.
@@ -95,7 +95,7 @@ class UnitOfWork implements PropertyChangedListener
      *           A value will only really be copied if the value in the entity is modified
      *           by the user.
      */
-    private $originalEntityData = array();
+    protected $originalEntityData = array();
 
     /**
      * Map of entity changes. Keys are object ids (spl_object_hash).
@@ -103,7 +103,7 @@ class UnitOfWork implements PropertyChangedListener
      *
      * @var array
      */
-    private $entityChangeSets = array();
+    protected $entityChangeSets = array();
 
     /**
      * The (cached) states of any known entities.
@@ -111,7 +111,7 @@ class UnitOfWork implements PropertyChangedListener
      *
      * @var array
      */
-    private $entityStates = array();
+    protected $entityStates = array();
 
     /**
      * Map of entities that are scheduled for dirty checking at commit time.
@@ -121,49 +121,49 @@ class UnitOfWork implements PropertyChangedListener
      * @var array
      * @todo rename: scheduledForSynchronization
      */
-    private $scheduledForDirtyCheck = array();
+    protected $scheduledForDirtyCheck = array();
 
     /**
      * A list of all pending entity insertions.
      *
      * @var array
      */
-    private $entityInsertions = array();
+    protected $entityInsertions = array();
 
     /**
      * A list of all pending entity updates.
      *
      * @var array
      */
-    private $entityUpdates = array();
+    protected $entityUpdates = array();
 
     /**
      * Any pending extra updates that have been scheduled by persisters.
      *
      * @var array
      */
-    private $extraUpdates = array();
+    protected $extraUpdates = array();
 
     /**
      * A list of all pending entity deletions.
      *
      * @var array
      */
-    private $entityDeletions = array();
+    protected $entityDeletions = array();
 
     /**
      * All pending collection deletions.
      *
      * @var array
      */
-    private $collectionDeletions = array();
+    protected $collectionDeletions = array();
 
     /**
      * All pending collection updates.
      *
      * @var array
      */
-    private $collectionUpdates = array();
+    protected $collectionUpdates = array();
 
     /**
      * List of collections visited during changeset calculation on a commit-phase of a UnitOfWork.
@@ -172,14 +172,14 @@ class UnitOfWork implements PropertyChangedListener
      *
      * @var array
      */
-    private $visitedCollections = array();
+    protected $visitedCollections = array();
 
     /**
      * The EntityManager that "owns" this UnitOfWork instance.
      *
      * @var \Doctrine\ORM\EntityManager
      */
-    private $em;
+    protected $em;
 
     /**
      * The calculator used to calculate the order in which changes to
@@ -187,49 +187,49 @@ class UnitOfWork implements PropertyChangedListener
      *
      * @var \Doctrine\ORM\Internal\CommitOrderCalculator
      */
-    private $commitOrderCalculator;
+    protected $commitOrderCalculator;
 
     /**
      * The entity persister instances used to persist entity instances.
      *
      * @var array
      */
-    private $persisters = array();
+    protected $persisters = array();
 
     /**
      * The collection persister instances used to persist collections.
      *
      * @var array
      */
-    private $collectionPersisters = array();
+    protected $collectionPersisters = array();
 
     /**
      * The EventManager used for dispatching events.
      *
      * @var \Doctrine\Common\EventManager
      */
-    private $evm;
+    protected $evm;
 
     /**
      * Orphaned entities that are scheduled for removal.
      *
      * @var array
      */
-    private $orphanRemovals = array();
+    protected $orphanRemovals = array();
 
     /**
      * Read-Only objects are never evaluated
      *
      * @var array
      */
-    private $readOnlyObjects = array();
+    protected $readOnlyObjects = array();
 
     /**
      * Map of Entity Class-Names and corresponding IDs that should eager loaded when requested.
      *
      * @var array
      */
-    private $eagerLoadingEntities = array();
+    protected $eagerLoadingEntities = array();
 
     /**
      * Initializes a new UnitOfWork instance, bound to the given EntityManager.
@@ -2373,7 +2373,7 @@ class UnitOfWork implements PropertyChangedListener
      *
      * @return \Doctrine\Common\Persistence\ObjectManagerAware|object
      */
-    private function newInstance($class)
+    protected function newInstance($class)
     {
         $entity = $class->newInstance();
 
