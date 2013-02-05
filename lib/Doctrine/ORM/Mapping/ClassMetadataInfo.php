@@ -565,7 +565,7 @@ class ClassMetadataInfo implements ClassMetadata
     /**
      * The ReflectionClass instance of the mapped class.
      *
-     * @var ReflectionClass
+     * @var \ReflectionClass
      */
     public $reflClass;
 
@@ -590,7 +590,7 @@ class ClassMetadataInfo implements ClassMetadata
     /**
      * The ReflectionProperty instances of the mapped class.
      *
-     * @var array
+     * @var array|\ReflectionProperty[]
      */
     public $reflFields = array();
 
