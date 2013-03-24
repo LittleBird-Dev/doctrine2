@@ -1,7 +1,6 @@
 {
     "name": "littlebird/doctrine/orm",
     "type": "library",
-    "version":"2.3.3",
     "description": "Object-Relational-Mapper for PHP",
     "keywords": ["orm", "database"],
     "homepage": "http://www.doctrine-project.org",
