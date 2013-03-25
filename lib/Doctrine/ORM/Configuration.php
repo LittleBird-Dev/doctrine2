@@ -652,17 +652,6 @@ class Configuration extends \Doctrine\DBAL\Configuration
     }
 
     /**
-     * Set naming strategy class
-     *
-     * @since 2.3
-     * @param string $namingStrategyClass class for naming stategy
-     */
-    public function setNamingStrategyClass($namingStrategyClass)
-    {
-        $this->setNamingStrategy(new $namingStrategyClass);
-    }
-
-    /**
      * Get naming strategy..
      *
      * @since 2.3
@@ -681,7 +670,7 @@ class Configuration extends \Doctrine\DBAL\Configuration
      * Set quote strategy.
      *
      * @since 2.3
-     * @param Doctrine\ORM\Mapping\QuoteStrategy $quoteStrategy
+     * @param \Doctrine\ORM\Mapping\QuoteStrategy $quoteStrategy
      */
     public function setQuoteStrategy(QuoteStrategy $quoteStrategy)
     {
@@ -692,7 +681,7 @@ class Configuration extends \Doctrine\DBAL\Configuration
      * Get quote strategy.
      *
      * @since 2.3
-     * @return Doctrine\ORM\Mapping\QuoteStrategy
+     * @return \Doctrine\ORM\Mapping\QuoteStrategy
      */
     public function getQuoteStrategy()
     {
