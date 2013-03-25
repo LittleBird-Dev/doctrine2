@@ -47,22 +47,22 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
     /**
      * @var EntityManager
      */
-    private $em;
+    protected $em;
 
     /**
      * @var \Doctrine\DBAL\Platforms\AbstractPlatform
      */
-    private $targetPlatform;
+    protected $targetPlatform;
 
     /**
      * @var \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver
      */
-    private $driver;
+    protected $driver;
 
     /**
      * @var \Doctrine\Common\EventManager
      */
-    private $evm;
+    protected $evm;
 
     /**
      * @param EntityManager $em
@@ -399,7 +399,7 @@ class ClassMetadataFactory extends AbstractClassMetadataFactory
      * @param ClassMetadataInfo $class
      * @throws ORMException
      */
-    private function completeIdGeneratorMapping(ClassMetadataInfo $class)
+    protected function completeIdGeneratorMapping(ClassMetadataInfo $class)
     {
         $idGenType = $class->generatorType;
         if ($idGenType == ClassMetadata::GENERATOR_TYPE_AUTO) {
