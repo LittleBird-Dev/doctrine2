@@ -19,8 +19,8 @@
 
 namespace Doctrine\ORM\Query;
 
-use Doctrine\ORM\Configuration,
-    Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Collection class for all the query filters.
@@ -43,21 +43,21 @@ class FilterCollection
     /**
      * The used Configuration.
      *
-     * @var Doctrine\ORM\Configuration
+     * @var \Doctrine\ORM\Configuration
      */
     private $config;
 
     /**
      * The EntityManager that "owns" this FilterCollection instance.
      *
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $em;
 
     /**
      * Instances of enabled filters.
      *
-     * @var array
+     * @var array|\Doctrine\ORM\Query\Filter\SQLFilter[]
      */
     private $enabledFilters = array();
 
@@ -85,7 +85,7 @@ class FilterCollection
     /**
      * Get all the enabled filters.
      *
-     * @return array The enabled filters.
+     * @return array|\Doctrine\ORM\Query\Filter\SQLFilter[] The enabled filters.
      */
     public function getEnabledFilters()
     {
@@ -99,7 +99,7 @@ class FilterCollection
      *
      * @throws \InvalidArgumentException If the filter does not exist.
      *
-     * @return SQLFilter The enabled filter.
+     * @return \Doctrine\ORM\Query\Filter\SQLFilter The enabled filter.
      */
     public function enable($name)
     {
@@ -125,7 +125,7 @@ class FilterCollection
      *
      * @param string $name Name of the filter.
      *
-     * @return SQLFilter The disabled filter.
+     * @return \Doctrine\ORM\Query\Filter\SQLFilter The disabled filter.
      *
      * @throws \InvalidArgumentException If the filter does not exist.
      */
@@ -147,7 +147,7 @@ class FilterCollection
      *
      * @param string $name Name of the filter.
      *
-     * @return SQLFilter The filter.
+     * @return \Doctrine\ORM\Query\Filter\SQLFilter The filter.
      *
      * @throws \InvalidArgumentException If the filter is not enabled.
      */

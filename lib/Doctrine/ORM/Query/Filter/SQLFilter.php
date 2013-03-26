@@ -19,9 +19,9 @@
 
 namespace Doctrine\ORM\Query\Filter;
 
-use Doctrine\ORM\EntityManager,
-    Doctrine\ORM\Mapping\ClassMetaData,
-    Doctrine\ORM\Query\ParameterTypeInferer;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetaData;
+use Doctrine\ORM\Query\ParameterTypeInferer;
 
 /**
  * The base class that user defined filters should extend.
@@ -38,7 +38,7 @@ abstract class SQLFilter
      * The entity manager.
      * @var EntityManager
      */
-    private $em;
+    protected $em;
 
     /**
      * Parameters for the filter.
@@ -92,6 +92,8 @@ abstract class SQLFilter
      *
      * @param string $name Name of the parameter.
      *
+     * @throws \InvalidArgumentException
+     *
      * @return string The SQL escaped parameter to use in a query.
      */
     final public function getParameter($name)
@@ -115,6 +117,9 @@ abstract class SQLFilter
 
     /**
      * Gets the SQL query part to add to a query.
+     *
+     * @param \Doctrine\ORM\Mapping\ClassMetaData $targetEntity
+     * @param string $targetTableAlias
      *
      * @return string The constraint SQL if there is available, empty string otherwise
      */
