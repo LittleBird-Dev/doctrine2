@@ -41,7 +41,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 
 /**
- * A BasicEntityPersiter maps an entity to a single table in a relational database.
+ * A BasicEntityPersister maps an entity to a single table in a relational database.
  *
  * A persister is always responsible for a single entity type.
  *
@@ -313,6 +313,7 @@ class BasicEntityPersister
      *
      * @param \Doctrine\ORM\Mapping\ClassMetadata $versionedClass
      * @param mixed $id
+     *
      * @return mixed
      */
     protected function fetchVersionValue($versionedClass, $id)
@@ -371,6 +372,9 @@ class BasicEntityPersister
      * @param string $quotedTableName The quoted name of the table to apply the UPDATE on.
      * @param array $updateData The map of columns to update (column => value).
      * @param boolean $versioned Whether the UPDATE should be versioned.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected final function _updateTable($entity, $quotedTableName, array $updateData, $versioned = false)
     {
@@ -454,6 +458,7 @@ class BasicEntityPersister
     /**
      * @todo Add check for platform if it supports foreign keys/cascading.
      * @param array $identifier
+     *
      * @return void
      */
     protected function deleteJoinTableRecords($identifier)
@@ -545,6 +550,7 @@ class BasicEntityPersister
      * </code>
      *
      * @param object $entity The entity for which to prepare the data.
+     *
      * @return array The prepared data.
      */
     protected function _prepareUpdateData($entity)
@@ -660,12 +666,13 @@ class BasicEntityPersister
      * @param int $lockMode
      * @param int $limit Limit number of results
      * @param array $orderBy Criteria to order by 
+     *
      * @return object The loaded and managed entity instance or NULL if the entity can not be found.
      * @todo Check identity map? loadById method? Try to guess whether $criteria is the id?
      */
     public function load(array $criteria, $entity = null, $assoc = null, array $hints = array(), $lockMode = 0, $limit = null, array $orderBy = null)
     {
-        $sql = $this->_getSelectEntitiesSQL($criteria, $assoc, $lockMode, $limit, null, $orderBy);        
+        $sql = $this->_getSelectEntitiesSQL($criteria, $assoc, $lockMode, $limit, null, $orderBy);
         list($params, $types) = $this->expandParameters($criteria);
         $stmt = $this->_conn->executeQuery($sql, $params, $types);
 
@@ -689,6 +696,9 @@ class BasicEntityPersister
      * @param array $identifier The identifier of the entity to load. Must be provided if
      *                          the association to load represents the owning side, otherwise
      *                          the identifier is derived from the $sourceEntity.
+     *
+     * @throws \Doctrine\ORM\Mapping\MappingException
+     *
      * @return object The loaded and managed entity instance or NULL if the entity can not be found.
      */
     public function loadOneToOneEntity(array $assoc, $sourceEntity, array $identifier = array())
@@ -758,6 +768,7 @@ class BasicEntityPersister
      * @param array $id The identifier of the entity as an associative array from
      *                  column or field names to values.
      * @param object $entity The entity to refresh.
+     * @param int $lockMode
      */
     public function refresh(array $id, $entity, $lockMode = 0)
     {
@@ -916,11 +927,10 @@ class BasicEntityPersister
     /**
      * Loads a collection of entities of a many-to-many association.
      *
-     * @param ManyToManyMapping $assoc The association mapping of the association being loaded.
-     * @param object $sourceEntity The entity that owns the collection.
-     * @param PersistentCollection $coll The collection to fill.
-     * @param int|null $offset
-     * @param int|null $limit
+     * @param array $assoc The association mapping of the association being loaded.
+     * @param object $sourceEntity The entity that owns the collection
+     * @param \Doctrine\ORM\PersistentCollection $coll The collection to fill.
+     *
      * @return array
      */
     public function loadManyToManyCollection(array $assoc, $sourceEntity, PersistentCollection $coll)
@@ -939,7 +949,7 @@ class BasicEntityPersister
             $quotedJoinTable = $this->quoteStrategy->getJoinTableName($assoc, $sourceClass, $this->_platform);
 
             foreach ($assoc['joinTable']['joinColumns'] as $joinColumn) {
-                $relationKeyColumn  = $joinColumn['name'];
+                //$relationKeyColumn  = $joinColumn['name'];
                 $sourceKeyColumn    = $joinColumn['referencedColumnName'];
                 $quotedKeyColumn    = $this->quoteStrategy->getJoinColumnName($joinColumn, $sourceClass, $this->_platform);
 
@@ -1001,12 +1011,11 @@ class BasicEntityPersister
      * Gets the SELECT SQL to select one or more entities by a set of field criteria.
      *
      * @param array|\Doctrine\Common\Collections\Criteria $criteria
-     * @param AssociationMapping $assoc
-     * @param string $orderBy
+     * @param array $assoc AssociationMapping
      * @param int $lockMode
      * @param int $limit
      * @param int $offset
-     * @param array $orderBy
+     * @param array|string $orderBy
      * @return string
      * @todo Refactor: _getSelectSQL(...)
      */
@@ -1052,6 +1061,9 @@ class BasicEntityPersister
      *
      * @param array $orderBy
      * @param string $baseTableAlias
+     *
+     * @throws \Doctrine\ORM\ORMException
+     *
      * @return string
      */
     protected final function _getOrderBySQL(array $orderBy, $baseTableAlias)
@@ -1229,7 +1241,7 @@ class BasicEntityPersister
      * Gets the SQL join fragment used when selecting entities from a
      * many-to-many association.
      *
-     * @param ManyToManyMapping $manyToMany
+     * @param array $manyToMany ManyToManyMapping
      * @return string
      */
     protected function _getSelectManyToManyJoinSQL(array $manyToMany)
@@ -1340,6 +1352,8 @@ class BasicEntityPersister
      * @param ClassMetadata $class The class that declares this field. The table this class is
      *                             mapped to must own the column for the given field.
      * @param string $alias
+     *
+     * @return string
      */
     protected function _getSelectColumnSQL($field, ClassMetadata $class, $alias = 'r')
     {
@@ -1361,6 +1375,8 @@ class BasicEntityPersister
      * Gets the SQL table alias for the given class name.
      *
      * @param string $className
+     * @param string $assocName
+     *
      * @return string The SQL table alias.
      * @todo Reconsider. Binding table aliases to class names is not such a good idea.
      */
@@ -1386,6 +1402,7 @@ class BasicEntityPersister
      *
      * @param array $criteria
      * @param int $lockMode
+     *
      * @return void
      */
     public function lock(array $criteria, $lockMode)
@@ -1422,6 +1439,7 @@ class BasicEntityPersister
      * Get the Select Where Condition from a Criteria object.
      *
      * @param \Doctrine\Common\Collections\Criteria $criteria
+     *
      * @return string
      */
     protected function _getSelectConditionCriteriaSQL(Criteria $criteria)
@@ -1471,6 +1489,8 @@ class BasicEntityPersister
      * @param string $field
      * @param array $assoc
      *
+     * @throws \Doctrine\ORM\ORMException
+
      * @return string
      */
     protected function getSelectConditionStatementColumnSQL($field, $assoc = null)
@@ -1513,7 +1533,7 @@ class BasicEntityPersister
      * or alter the criteria by which entities are selected.
      *
      * @param array $criteria
-     * @param AssociationMapping $assoc
+     * @param array $assoc AssociationMapping
      * @return string
      */
     protected function _getSelectConditionSQL(array $criteria, $assoc = null)
@@ -1550,8 +1570,8 @@ class BasicEntityPersister
      * @param array $assoc
      * @param object $sourceEntity
      * @param PersistentCollection $coll The collection to load/fill.
-     * @param int|null $offset
-     * @param int|null $limit
+     *
+     * @return array
      */
     public function loadOneToManyCollection(array $assoc, $sourceEntity, PersistentCollection $coll)
     {
@@ -1603,9 +1623,10 @@ class BasicEntityPersister
      * Expand the parameters from the given criteria and use the correct binding types if found.
      *
      * @param  array $criteria
+     *
      * @return array
      */
-    private function expandParameters($criteria)
+    protected function expandParameters($criteria)
     {
         $params = $types = array();
 
@@ -1626,6 +1647,9 @@ class BasicEntityPersister
      *
      * @param string $field
      * @param mixed $value
+     *
+     * @throws \Doctrine\ORM\Query\QueryException
+     *
      * @return integer
      */
     private function getType($field, $value)
@@ -1685,7 +1709,7 @@ class BasicEntityPersister
     }
 
     /**
-     * Retrieve an invidiual parameter value
+     * Retrieve an individual parameter value
      *
      * @param mixed $value
      * @return mixed
@@ -1714,6 +1738,8 @@ class BasicEntityPersister
      * Checks whether the given managed entity exists in the database.
      *
      * @param object $entity
+     * @param array $extraConditions
+     *
      * @return boolean TRUE if the entity exists in the database, FALSE otherwise.
      */
     public function exists($entity, array $extraConditions = array())
@@ -1775,7 +1801,7 @@ class BasicEntityPersister
     /**
      * Generates the filter SQL for a given entity and table alias.
      *
-     * @param ClassMetadata $targetEntity Metadata of the target entity.
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $targetEntity Metadata of the target entity.
      * @param string $targetTableAlias The table alias of the joined/selected table.
      *
      * @return string The SQL query part to add to a query.
